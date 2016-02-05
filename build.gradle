@@ -1,0 +1,61 @@
+// プラグイン定義 利用できるタスク(gradle tasks)が増える
+apply {
+    plugin 'groovy' // Viewテンプレートにgroovyを使用しているので、javaではなくgroovyを宣言
+    plugin 'idea' // IntelliJ でプロジェクトを読み込めるように宣言
+    plugin 'war'
+}
+
+sourceSets {
+    main {
+        java.srcDirs = []
+        groovy.srcDirs = ['src/main/java']
+        resources {
+            srcDir 'src/main/java'
+        }
+        // TomcatがContextを自動リロードするために、クラスファイルの出力先を変更
+        output.classesDir = 'src/main/webapp/WEB-INF/classes'
+    }
+
+    test {
+        java.srcDirs = []
+        groovy.srcDirs = ['src/test/groovy', 'src/test/java']
+    }
+}
+
+test {
+    testLogging.exceptionFormat = 'full'
+
+}
+
+war {
+    baseName = "projectName"
+    version = "1.0"
+}
+
+clean {
+    delete << 'src/main/webapp/WEB-INF/classes'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile "org.springframework:spring-webmvc:4.2.0.RELEASE"
+    compile "org.springframework.data:spring-data-commons:1.10.2.RELEASE"
+    compile "org.codehaus.groovy:groovy-all:2.4.4"
+    runtime "org.slf4j:slf4j-api:1.7.7"
+    runtime "ch.qos.logback:logback-classic:1.1.2"
+    providedCompile "javax.servlet:javax.servlet-api:3.0.1"
+    providedCompile "org.projectlombok:lombok:1.16.2"
+
+    testCompile "junit:junit-dep:4.10"
+    testCompile "uk.com.robust-it:cloning:1.9.0"
+    testCompile "org.springframework:spring-test:4.2.0.RELEASE"
+    testCompile "com.jayway.jsonpath:json-path-assert:0.8.1"
+    testCompile "org.spockframework:spock-spring:1.0-groovy-2.4"
+
+}
+
+
